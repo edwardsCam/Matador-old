@@ -72,6 +72,10 @@
                 ], scene);
             }
 
+            scene.moveCamera = function() {
+                camera.position.z += 0.25;
+            }
+
             return scene;
 
         };
@@ -79,6 +83,7 @@
         var scene = createScene();
 
         engine.runRenderLoop(function() {
+            scene.moveCamera();
             scene.render();
         });
 
