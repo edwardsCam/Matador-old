@@ -31,16 +31,22 @@
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
 
+        var len = 500;
+        var wid = 10;
+        var _wid = wid * -1;
+
         var createScene = function() {
 
             // This creates a basic Babylon Scene object (non-mesh)
             var scene = new BABYLON.Scene(engine);
 
+            var camTarget = new BABYLON.Vector3(0, 0, 100);
+
             // This creates and positions a free camera (non-mesh)
-            var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
+            var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
 
             // This targets the camera to scene origin
-            camera.setTarget(new BABYLON.Vector3(0, 0, 100));
+            camera.setTarget(camTarget);
 
             // This attaches the camera to the canvas
             camera.attachControl(canvas, true);
@@ -63,18 +69,31 @@
                 */
 
             var linebl = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(-10, -10, -10), new BABYLON.Vector3(-10, -10, 500)
+                    new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
                 ], scene),
                 linetl = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(-10, 10, -10), new BABYLON.Vector3(-10, 10, 500)
+                    new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
                 ], scene),
                 linebr = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(10, -10, -10), new BABYLON.Vector3(10, -10, 500)
+                    new BABYLON.Vector3(wid, _wid, -_wid), new BABYLON.Vector3(wid, _wid, len)
                 ], scene),
                 linetr = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(10, 10, -10), new BABYLON.Vector3(10, 10, 500)
+                    new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
                 ], scene);
 
+            var num_milestones = len / 25;
+				
+            var lines;
+            for (var i = 0; i < num_milestones; i++) {
+                var startpos = i * num_milestones;
+                lines = BABYLON.Mesh.CreateLines("lineMesh", [
+                    new BABYLON.Vector3(_wid, _wid, startpos),
+					new BABYLON.Vector3(wid, _wid, startpos),
+                    new BABYLON.Vector3(wid, wid, startpos),
+                    new BABYLON.Vector3(_wid, wid, startpos),
+                    new BABYLON.Vector3(_wid, _wid, startpos)
+                ], scene);
+            }
 
             return scene;
 
