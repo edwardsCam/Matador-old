@@ -38,6 +38,8 @@
 
         var movespeed = 0.2;
 
+        var walls_enabled = false;
+
         var createScene = function() {
 
             var scene = new BABYLON.Scene(engine);
@@ -61,10 +63,8 @@
             amp = 1;
             freq = 5;
 
-
-
             scene.tick = function() {
-                time += (1/engine.getFps());
+                time += (1 / engine.getFps());
             }
 
             scene.moveCamera = function() {
@@ -86,9 +86,9 @@
 
             scene.drawWaves = function() {
                 var vanilla_sin = Math.sin(time);
-                amp = (vanilla_sin + 1) * 3;
-                freq = (vanilla_sin + 1) * 3;
-                wave = amp * Math.sin(time*freq);
+                amp = (vanilla_sin + 1) * 2;
+                freq = (vanilla_sin + 1) * 2;
+                wave = amp * Math.sin(time * freq);
                 var adjust = 15 * Math.abs(mousex / 15);
                 adjust = 15 - adjust;
                 new_pos.y += wave;
@@ -99,31 +99,35 @@
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 1;
 
-            var linebl = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
-                ], scene),
-                linetl = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
-                ], scene),
-                linebr = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
-                ], scene),
-                linetr = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
-                ], scene);
+            if (walls_enabled) {
+                (function drawWalls() {
+                    var linebl = BABYLON.Mesh.CreateLines("lines", [
+                            new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
+                        ], scene),
+                        linetl = BABYLON.Mesh.CreateLines("lines", [
+                            new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
+                        ], scene),
+                        linebr = BABYLON.Mesh.CreateLines("lines", [
+                            new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
+                        ], scene),
+                        linetr = BABYLON.Mesh.CreateLines("lines", [
+                            new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
+                        ], scene);
 
-            var num_milestones = len / 25;
+                    var num_milestones = len / 25;
 
-            var lines;
-            for (var i = 0; i < num_milestones; i++) {
-                var startpos = i * num_milestones;
-                lines = BABYLON.Mesh.CreateLines("markers", [
-                    new BABYLON.Vector3(_wid, _wid, startpos),
-                    new BABYLON.Vector3(wid, _wid, startpos),
-                    new BABYLON.Vector3(wid, wid, startpos),
-                    new BABYLON.Vector3(_wid, wid, startpos),
-                    new BABYLON.Vector3(_wid, _wid, startpos)
-                ], scene);
+                    var lines;
+                    for (var i = 0; i < num_milestones; i++) {
+                        var startpos = i * num_milestones;
+                        lines = BABYLON.Mesh.CreateLines("markers", [
+                            new BABYLON.Vector3(_wid, _wid, startpos),
+                            new BABYLON.Vector3(wid, _wid, startpos),
+                            new BABYLON.Vector3(wid, wid, startpos),
+                            new BABYLON.Vector3(_wid, wid, startpos),
+                            new BABYLON.Vector3(_wid, _wid, startpos)
+                        ], scene);
+                    }
+                }());
             }
 
             return scene;
