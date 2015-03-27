@@ -58,7 +58,9 @@
                 walls_enabled = true,
                 markers_enabled = true,
                 corners_enabled = false,
-                symmetric = true;
+                symmetric_h = true,
+                symmetric_v = false,
+                meet_at_zero = false;
 
             scene.tick = function() {
                 time += (1 / engine.getFps());
@@ -83,14 +85,27 @@
                 var z_adjustment = adjust_factor * Math.abs(mouse_x / adjust_factor),
                     base = Math.sin(time * 4);
                 z_adjustment = Math.max(8, adjust_factor - z_adjustment);
-                amp = base * 8;
+                amp = base * 5;
                 freq = base * 4;
                 wave = amp * Math.cos(freq);
                 new_pos.y = Math.min(wid - margin, Math.max(_wid + margin, new_pos.y + wave));
+                if (meet_at_zero) {
+                    if (mouse_y > 0) {
+                        new_pos.y = Math.max(0, new_pos.y);
+                    } else {
+                        new_pos.y = Math.min(0, new_pos.y);
+                    }
+                }
                 new_pos.z += z_adjustment;
                 BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
-                if (symmetric) {
+                if (symmetric_h) {
                     BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x * -1, prev_pos.y, prev_pos.z), new BABYLON.Vector3(new_pos.x * -1, new_pos.y, new_pos.z)], scene);
+                    if (symmetric_v) {
+                        BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x * -1, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x * -1, new_pos.y * -1, new_pos.z)], scene);
+                    }
+                }
+                if (symmetric_v) {
+                   BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x, new_pos.y * -1, new_pos.z)], scene);
                 }
             }
 
