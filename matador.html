@@ -52,7 +52,7 @@
                 adjust_factor = 25,
                 amp = 1,
                 freq = 5,
-                damp = 60,
+                damp = 50,
                 movespeed = 0.2,
                 walls_enabled = true;
 
@@ -78,7 +78,10 @@
             scene.drawWaves = function() {
                 var adjust = adjust_factor * Math.abs(mousex / adjust_factor);
                 adjust = adjust_factor - adjust;
-                wave = 2 * Math.sin(time * 5);
+                var base = Math.sin(time * 4);
+                amp = base * 8;
+                freq = base * 4;
+                wave = amp * Math.cos(freq);
                 new_pos.y += wave;
                 new_pos.z += adjust;
                 BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
