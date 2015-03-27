@@ -30,6 +30,8 @@
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
 
+        var time = 0;
+
         var len = 500;
         var wid = 10;
         var _wid = wid * -1;
@@ -40,10 +42,27 @@
 
             var scene = new BABYLON.Scene(engine);
             var camTarget = new BABYLON.Vector3(0, 0, 100);
+
+            var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
+            camera.setTarget(camTarget);
+            camera.attachControl(canvas, true);
+
+            var globalView = camera.viewport.toGlobal(engine);
+
             var damp = 70;
 
-            var mousex, mousey;
-            var prev;
+            var mousex = scene.pointerX - globalView.width / 2;
+            var mousey = globalView.height / 2 - scene.pointerY;
+            var prev_pos;
+            var new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 9 + movespeed)
+
+            var wave;
+
+
+
+            scene.tick = function() {
+                time += (1/engine.getFps());
+            }
 
             scene.moveCamera = function() {
                 camera.position.z += movespeed;
@@ -51,7 +70,7 @@
             }
 
             scene.followMouse = function() {
-                prev = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10)
+                prev_pos = new_pos;
                 mousex = scene.pointerX - globalView.width / 2;
                 mousey = globalView.height / 2 - scene.pointerY;
                 mousex /= damp;
@@ -59,17 +78,19 @@
                 camTarget.x = mousex;
                 camTarget.y = mousey;
                 camera.setTarget(camTarget);
+                new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 9 + movespeed)
             }
 
             scene.drawWaves = function() {
-                var line = BABYLON.Mesh.CreateLines("waves", [prev, new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)], scene);
+                wave = Math.sin(time*20);
+                var test = Math.abs(mousex / 15);
+                test *= 15;
+                test = 15 - test;
+                console.log(test);
+                new_pos.y += wave;
+                new_pos.z += test;
+                var line = BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
             }
-
-            var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
-            camera.setTarget(camTarget);
-            camera.attachControl(canvas, true);
-
-            var globalView = camera.viewport.toGlobal(engine);
 
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 1;
@@ -108,6 +129,7 @@
         var scene = createScene();
 
         engine.runRenderLoop(function() {
+            scene.tick();
             scene.moveCamera();
             scene.followMouse();
             scene.drawWaves();
