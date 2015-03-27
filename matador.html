@@ -38,7 +38,7 @@
 
         var movespeed = 0.2;
 
-        var walls_enabled = false;
+        var walls_enabled = true;
 
         var createScene = function() {
 
@@ -51,14 +51,17 @@
 
             var globalView = camera.viewport.toGlobal(engine);
 
-            var damp = 70;
+            var damp = 60;
 
             var mousex = scene.pointerX - globalView.width / 2;
             var mousey = globalView.height / 2 - scene.pointerY;
             var prev_pos;
-            var new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 9 + movespeed)
+            var new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)
 
             var wave, freq, amp;
+            var adjust_factor = 25;
+
+            var waxing = true;
 
             amp = 1;
             freq = 5;
@@ -81,16 +84,21 @@
                 camTarget.x = mousex;
                 camTarget.y = mousey;
                 camera.setTarget(camTarget);
-                new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 9 + movespeed)
+                new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)
             }
 
             scene.drawWaves = function() {
-                var vanilla_sin = Math.sin(time);
-                amp = (vanilla_sin + 1) * 2;
-                freq = (vanilla_sin + 1) * 2;
-                wave = amp * Math.sin(time * freq);
-                var adjust = 15 * Math.abs(mousex / 15);
-                adjust = 15 - adjust;
+                
+                var adjust = adjust_factor * Math.abs(mousex / adjust_factor);
+                adjust = adjust_factor - adjust;
+                /*
+                var vanilla = Math.sin(time) + 1;
+                
+                amp = vanilla * 2;
+                freq = vanilla;
+                wave = amp * Math.sin(vanilla * freq);
+                */
+                wave = 2 * Math.sin(time*5);
                 new_pos.y += wave;
                 new_pos.z += adjust;
                 BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
