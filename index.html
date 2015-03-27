@@ -34,13 +34,42 @@
         var wid = 10;
         var _wid = wid * -1;
 
+        var movespeed = 0.2;
+
         var createScene = function() {
 
             var scene = new BABYLON.Scene(engine);
             var camTarget = new BABYLON.Vector3(0, 0, 100);
+            var damp = 70;
+
+            var mousex, mousey;
+            var prev;
+
+            scene.moveCamera = function() {
+                camera.position.z += movespeed;
+                camTarget.z += movespeed;
+            }
+
+            scene.followMouse = function() {
+                prev = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10)
+                mousex = scene.pointerX - globalView.width / 2;
+                mousey = globalView.height / 2 - scene.pointerY;
+                mousex /= damp;
+                mousey /= damp;
+                camTarget.x = mousex;
+                camTarget.y = mousey;
+                camera.setTarget(camTarget);
+            }
+
+            scene.drawWaves = function() {
+                var line = BABYLON.Mesh.CreateLines("waves", [prev, new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)], scene);
+            }
+
             var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
             camera.setTarget(camTarget);
             camera.attachControl(canvas, true);
+
+            var globalView = camera.viewport.toGlobal(engine);
 
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 1;
@@ -52,28 +81,24 @@
                     new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
                 ], scene),
                 linebr = BABYLON.Mesh.CreateLines("lines", [
-                    new BABYLON.Vector3(wid, _wid, -_wid), new BABYLON.Vector3(wid, _wid, len)
+                    new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
                 ], scene),
                 linetr = BABYLON.Mesh.CreateLines("lines", [
                     new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
                 ], scene);
 
             var num_milestones = len / 25;
-				
+
             var lines;
             for (var i = 0; i < num_milestones; i++) {
                 var startpos = i * num_milestones;
-                lines = BABYLON.Mesh.CreateLines("lineMesh", [
+                lines = BABYLON.Mesh.CreateLines("markers", [
                     new BABYLON.Vector3(_wid, _wid, startpos),
-					new BABYLON.Vector3(wid, _wid, startpos),
+                    new BABYLON.Vector3(wid, _wid, startpos),
                     new BABYLON.Vector3(wid, wid, startpos),
                     new BABYLON.Vector3(_wid, wid, startpos),
                     new BABYLON.Vector3(_wid, _wid, startpos)
                 ], scene);
-            }
-
-            scene.moveCamera = function() {
-                camera.position.z += 0.25;
             }
 
             return scene;
@@ -84,6 +109,8 @@
 
         engine.runRenderLoop(function() {
             scene.moveCamera();
+            scene.followMouse();
+            scene.drawWaves();
             scene.render();
         });
 
