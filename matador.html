@@ -52,9 +52,12 @@
                 adjust_factor = 30,
                 amp,
                 freq,
-                damp = 40,
+                damp = 20,
+                margin = 1,
                 movespeed = 0.2,
-                walls_enabled = true;
+                walls_enabled = true,
+                markers_enabled = true,
+                corners_enabled = false;
 
             scene.tick = function() {
                 time += (1 / engine.getFps());
@@ -72,48 +75,52 @@
                 camTarget.x = mousex;
                 camTarget.y = mousey;
                 camera.setTarget(camTarget);
-                new_pos = new BABYLON.Vector3(mousex < 0 ? Math.max(mousex, _wid + 0.5) : Math.min(mousex, wid-0.5), mousey, camera.position.z + 10 + movespeed)
+                new_pos = new BABYLON.Vector3(mousex < 0 ? Math.max(mousex, _wid + margin) : Math.min(mousex, wid - margin), mousey < 0 ? Math.max(mousey, _wid + margin) : Math.min(mousey, wid - margin), camera.position.z + 10 + movespeed)
             }
 
             scene.drawWaves = function() {
                 var adjust = adjust_factor * Math.abs(mousex / adjust_factor);
-                adjust = adjust_factor - adjust;
+                adjust = Math.max(5, adjust_factor - adjust);
                 var base = Math.sin(time * 4);
                 amp = base * 8;
                 freq = base * 4;
                 wave = amp * Math.cos(freq);
-                new_pos.y += wave;
+                new_pos.y = Math.min(wid - margin, Math.max(_wid + margin, new_pos.y + wave));
                 new_pos.z += adjust;
                 BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
             }
 
             if (walls_enabled) {
                 (function drawWalls() {
-                    var linebl = BABYLON.Mesh.CreateLines("lines", [
-                            new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
-                        ], scene),
-                        linetl = BABYLON.Mesh.CreateLines("lines", [
-                            new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
-                        ], scene),
-                        linebr = BABYLON.Mesh.CreateLines("lines", [
-                            new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
-                        ], scene),
-                        linetr = BABYLON.Mesh.CreateLines("lines", [
-                            new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
-                        ], scene);
+                    if (corners_enabled) {
+                        var linebl = BABYLON.Mesh.CreateLines("lines", [
+                                new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
+                            ], scene),
+                            linetl = BABYLON.Mesh.CreateLines("lines", [
+                                new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
+                            ], scene),
+                            linebr = BABYLON.Mesh.CreateLines("lines", [
+                                new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
+                            ], scene),
+                            linetr = BABYLON.Mesh.CreateLines("lines", [
+                                new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
+                            ], scene);
+                    }
 
-                    var num_milestones = len / 25;
+                    if (markers_enabled) {
+                        var num_milestones = len / 25;
 
-                    var lines;
-                    for (var i = 0; i < num_milestones; i++) {
-                        var startpos = i * num_milestones;
-                        lines = BABYLON.Mesh.CreateLines("markers", [
-                            new BABYLON.Vector3(_wid, _wid, startpos),
-                            new BABYLON.Vector3(wid, _wid, startpos),
-                            new BABYLON.Vector3(wid, wid, startpos),
-                            new BABYLON.Vector3(_wid, wid, startpos),
-                            new BABYLON.Vector3(_wid, _wid, startpos)
-                        ], scene);
+                        var lines;
+                        for (var i = 0; i < num_milestones; i++) {
+                            var startpos = i * num_milestones;
+                            lines = BABYLON.Mesh.CreateLines("markers", [
+                                new BABYLON.Vector3(_wid, _wid, startpos),
+                                new BABYLON.Vector3(wid, _wid, startpos),
+                                new BABYLON.Vector3(wid, wid, startpos),
+                                new BABYLON.Vector3(_wid, wid, startpos),
+                                new BABYLON.Vector3(_wid, _wid, startpos)
+                            ], scene);
+                        }
                     }
                 }());
             }
