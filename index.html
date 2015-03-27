@@ -56,7 +56,10 @@
             var prev_pos;
             var new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 9 + movespeed)
 
-            var wave;
+            var wave, freq, amp;
+
+            amp = 1;
+            freq = 5;
 
 
 
@@ -82,14 +85,15 @@
             }
 
             scene.drawWaves = function() {
-                wave = Math.sin(time*20);
-                var test = Math.abs(mousex / 15);
-                test *= 15;
-                test = 15 - test;
-                console.log(test);
+                var vanilla_sin = Math.sin(time);
+                amp = (vanilla_sin + 1) * 3;
+                freq = (vanilla_sin + 1) * 3;
+                wave = amp * Math.sin(time*freq);
+                var adjust = 15 * Math.abs(mousex / 15);
+                adjust = 15 - adjust;
                 new_pos.y += wave;
-                new_pos.z += test;
-                var line = BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
+                new_pos.z += adjust;
+                BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
             }
 
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
