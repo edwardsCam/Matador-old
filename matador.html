@@ -30,7 +30,7 @@
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
         var time = 0;
-        var len = 500;
+        var len = 1000;
         var wid = 10;
         var _wid = wid * -1;
 
@@ -49,10 +49,10 @@
                 prev_pos,
                 new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed),
                 wave,
-                adjust_factor = 25,
-                amp = 1,
-                freq = 5,
-                damp = 50,
+                adjust_factor = 30,
+                amp,
+                freq,
+                damp = 40,
                 movespeed = 0.2,
                 walls_enabled = true;
 
@@ -72,7 +72,7 @@
                 camTarget.x = mousex;
                 camTarget.y = mousey;
                 camera.setTarget(camTarget);
-                new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)
+                new_pos = new BABYLON.Vector3(mousex < 0 ? Math.max(mousex, _wid + 0.5) : Math.min(mousex, wid-0.5), mousey, camera.position.z + 10 + movespeed)
             }
 
             scene.drawWaves = function() {
