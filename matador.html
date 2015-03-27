@@ -29,42 +29,32 @@
     <script>
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
-
         var time = 0;
-
         var len = 500;
         var wid = 10;
         var _wid = wid * -1;
 
-        var movespeed = 0.2;
-
-        var walls_enabled = true;
-
         var createScene = function() {
 
-            var scene = new BABYLON.Scene(engine);
-            var camTarget = new BABYLON.Vector3(0, 0, 100);
+            var scene = new BABYLON.Scene(engine),
+                camTarget = new BABYLON.Vector3(0, 0, 100);
 
             var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
             camera.setTarget(camTarget);
             camera.attachControl(canvas, true);
-
             var globalView = camera.viewport.toGlobal(engine);
 
-            var damp = 60;
-
-            var mousex = scene.pointerX - globalView.width / 2;
-            var mousey = globalView.height / 2 - scene.pointerY;
-            var prev_pos;
-            var new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed)
-
-            var wave, freq, amp;
-            var adjust_factor = 25;
-
-            var waxing = true;
-
-            amp = 1;
-            freq = 5;
+            var mousex = scene.pointerX - globalView.width / 2,
+                mousey = globalView.height / 2 - scene.pointerY,
+                prev_pos,
+                new_pos = new BABYLON.Vector3(mousex, mousey, camera.position.z + 10 + movespeed),
+                wave,
+                adjust_factor = 25,
+                amp = 1,
+                freq = 5,
+                damp = 60,
+                movespeed = 0.2,
+                walls_enabled = true;
 
             scene.tick = function() {
                 time += (1 / engine.getFps());
@@ -77,10 +67,8 @@
 
             scene.followMouse = function() {
                 prev_pos = new_pos;
-                mousex = scene.pointerX - globalView.width / 2;
-                mousey = globalView.height / 2 - scene.pointerY;
-                mousex /= damp;
-                mousey /= damp;
+                mousex = (scene.pointerX - globalView.width / 2) / damp;
+                mousey = (globalView.height / 2 - scene.pointerY) / damp;
                 camTarget.x = mousex;
                 camTarget.y = mousey;
                 camera.setTarget(camTarget);
@@ -88,24 +76,13 @@
             }
 
             scene.drawWaves = function() {
-                
                 var adjust = adjust_factor * Math.abs(mousex / adjust_factor);
                 adjust = adjust_factor - adjust;
-                /*
-                var vanilla = Math.sin(time) + 1;
-                
-                amp = vanilla * 2;
-                freq = vanilla;
-                wave = amp * Math.sin(vanilla * freq);
-                */
-                wave = 2 * Math.sin(time*5);
+                wave = 2 * Math.sin(time * 5);
                 new_pos.y += wave;
                 new_pos.z += adjust;
                 BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
             }
-
-            var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-            light.intensity = 1;
 
             if (walls_enabled) {
                 (function drawWalls() {
