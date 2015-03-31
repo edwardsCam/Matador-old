@@ -27,12 +27,15 @@
 <body>
     <canvas id="renderCanvas"></canvas>
     <script>
-        var canvas = document.getElementById("renderCanvas");
-        var engine = new BABYLON.Engine(canvas, true);
-        var time = 0;
-        var len = 1000;
-        var wid = 15;
-        var _wid = wid * -1;
+        var canvas = document.getElementById("renderCanvas"),
+            engine = new BABYLON.Engine(canvas, true),
+            time = 0,
+            margin = 2,
+            len = 1000,
+            wid = 15,
+            _wid = wid * -1,
+            mwid = wid - margin,
+            _mwid = _wid + margin;
 
         var createScene = function() {
 
@@ -50,15 +53,17 @@
                 new_pos = new BABYLON.Vector3(mouse_x, mouse_y, camera.position.z + 10 + movespeed),
                 wave,
                 adjust_factor = 30,
+                theta1 = 0,
+                theta1_w = 0.1,
+                theta1_r = 1,
                 amp,
                 freq,
-                damp = 20,
-                margin = 2,
+                damp = 40,
                 movespeed = 0.2,
                 walls_enabled = true,
-                markers_enabled = true,
-                corners_enabled = false,
-                symmetric_h = true,
+                markers_enabled = false,
+                corners_enabled = true,
+                symmetric_h = false,
                 symmetric_v = false,
                 meet_at_zero = false;
 
@@ -78,17 +83,24 @@
                 camTarget.x = mouse_x;
                 camTarget.y = mouse_y;
                 camera.setTarget(camTarget);
-                new_pos = new BABYLON.Vector3(mouse_x < 0 ? Math.max(mouse_x, _wid + margin) : Math.min(mouse_x, wid - margin), mouse_y < 0 ? Math.max(mouse_y, _wid + margin) : Math.min(mouse_y, wid - margin), camera.position.z + 10 + movespeed)
+                new_pos = new BABYLON.Vector3(mouse_x < 0 ? Math.max(mouse_x, _wid + margin) : Math.min(mouse_x, wid - margin),
+                    mouse_y < 0 ? Math.max(mouse_y, _wid + margin) : Math.min(mouse_y, wid - margin),
+                    camera.position.z + 10 + movespeed)
             }
 
             scene.drawWaves = function() {
+                theta1 += theta1_w;
                 var z_adjustment = adjust_factor * Math.abs(mouse_x / adjust_factor),
-                    base = Math.sin(time * 4);
+                base = Math.sin(time*4),
+                    tsin = Math.sin(theta1),
+                    tcos = Math.cos(theta1);
                 z_adjustment = Math.max(8, adjust_factor - z_adjustment);
-                amp = base * 5;
-                freq = base * 4;
-                wave = amp * Math.cos(freq);
-                new_pos.y = Math.min(wid - margin, Math.max(_wid + margin, new_pos.y + wave));
+                theta1_r = 26 - 0.85 * z_adjustment;
+                amp = base * 3;
+                freq = base * 2;
+                wave = Math.cos(time*5);
+                new_pos.y = Math.min(mwid, Math.max(_mwid, (new_pos.y + wave * tsin) - theta1_r * tcos));
+                new_pos.x = Math.min(mwid, Math.max(_mwid, (new_pos.x + wave * tcos) + theta1_r * tsin));
                 if (meet_at_zero) {
                     if (mouse_y > 0) {
                         new_pos.y = Math.max(0, new_pos.y);
@@ -105,7 +117,7 @@
                     }
                 }
                 if (symmetric_v) {
-                   BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x, new_pos.y * -1, new_pos.z)], scene);
+                    BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x, new_pos.y * -1, new_pos.z)], scene);
                 }
             }
 
