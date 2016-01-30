@@ -1,180 +1,20 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Matador</title>
+        <script src="http://www.babylonjs.com/babylon.js"></script>
+        <link rel="stylesheet" type="text/css" href="style/style.css">
+    </head>
 
-    <title>Matador</title>
-    <script src="http://www.babylonjs.com/babylon.js"></script>
-    <style>
-        html,
-        body {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        
-        #renderCanvas {
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
-    </style>
-</head>
-
-<body>
-    <canvas id="renderCanvas"></canvas>
-    <script>
-        var canvas = document.getElementById("renderCanvas"),
-            engine = new BABYLON.Engine(canvas, true),
-            time = 0,
-            margin = 2,
-            len = 1000,
-            wid = 15,
-            _wid = wid * -1,
-            mwid = wid - margin,
-            _mwid = _wid + margin;
-
-        var createScene = function() {
-
-            var scene = new BABYLON.Scene(engine),
-                camTarget = new BABYLON.Vector3(0, 0, 100);
-
-            var camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
-            camera.setTarget(camTarget);
-            camera.attachControl(canvas, true);
-            var globalView = camera.viewport.toGlobal(engine);
-
-            var mouse_x = scene.pointerX - globalView.width / 2,
-                mouse_y = globalView.height / 2 - scene.pointerY,
-                prev_pos,
-                new_pos = new BABYLON.Vector3(mouse_x, mouse_y, camera.position.z + 10 + movespeed),
-                wave,
-                adjust_factor = 30,
-                theta1 = 0,
-                theta1_w = 0.1,
-                theta1_r = 1,
-                amp,
-                freq,
-                damp = 40,
-                movespeed = 0.2,
-                walls_enabled = true,
-                markers_enabled = false,
-                corners_enabled = true,
-                symmetric_h = false,
-                symmetric_v = false,
-                meet_at_zero = false;
-
-            scene.tick = function() {
-                time += (1 / engine.getFps());
-            }
-
-            scene.moveCamera = function() {
-                camera.position.z += movespeed;
-                camTarget.z += movespeed;
-            }
-
-            scene.followMouse = function() {
-                prev_pos = new_pos;
-                mouse_x = (scene.pointerX - globalView.width / 2) / damp;
-                mouse_y = (globalView.height / 2 - scene.pointerY) / damp;
-                camTarget.x = mouse_x;
-                camTarget.y = mouse_y;
-                camera.setTarget(camTarget);
-                new_pos = new BABYLON.Vector3(mouse_x < 0 ? Math.max(mouse_x, _wid + margin) : Math.min(mouse_x, wid - margin),
-                    mouse_y < 0 ? Math.max(mouse_y, _wid + margin) : Math.min(mouse_y, wid - margin),
-                    camera.position.z + 10 + movespeed)
-            }
-
-            scene.drawWaves = function() {
-                theta1 += theta1_w;
-                var z_adjustment = adjust_factor * Math.abs(mouse_x / adjust_factor),
-                base = Math.sin(time*4),
-                    tsin = Math.sin(theta1),
-                    tcos = Math.cos(theta1);
-                z_adjustment = Math.max(8, adjust_factor - z_adjustment);
-                theta1_r = 26 - 0.85 * z_adjustment;
-                amp = base * 3;
-                freq = base * 2;
-                wave = Math.cos(time*5);
-                new_pos.y = Math.min(mwid, Math.max(_mwid, (new_pos.y + wave * tsin) - theta1_r * tcos));
-                new_pos.x = Math.min(mwid, Math.max(_mwid, (new_pos.x + wave * tcos) + theta1_r * tsin));
-                if (meet_at_zero) {
-                    if (mouse_y > 0) {
-                        new_pos.y = Math.max(0, new_pos.y);
-                    } else {
-                        new_pos.y = Math.min(0, new_pos.y);
-                    }
-                }
-                new_pos.z += z_adjustment;
-                BABYLON.Mesh.CreateLines("waves", [prev_pos, new_pos], scene);
-                if (symmetric_h) {
-                    BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x * -1, prev_pos.y, prev_pos.z), new BABYLON.Vector3(new_pos.x * -1, new_pos.y, new_pos.z)], scene);
-                    if (symmetric_v) {
-                        BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x * -1, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x * -1, new_pos.y * -1, new_pos.z)], scene);
-                    }
-                }
-                if (symmetric_v) {
-                    BABYLON.Mesh.CreateLines("waves", [new BABYLON.Vector3(prev_pos.x, prev_pos.y * -1, prev_pos.z), new BABYLON.Vector3(new_pos.x, new_pos.y * -1, new_pos.z)], scene);
-                }
-            }
-
-            if (walls_enabled) {
-                (function drawWalls() {
-                    if (corners_enabled) {
-                        var linebl = BABYLON.Mesh.CreateLines("lines", [
-                                new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
-                            ], scene),
-                            linetl = BABYLON.Mesh.CreateLines("lines", [
-                                new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
-                            ], scene),
-                            linebr = BABYLON.Mesh.CreateLines("lines", [
-                                new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
-                            ], scene),
-                            linetr = BABYLON.Mesh.CreateLines("lines", [
-                                new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
-                            ], scene);
-                    }
-
-                    if (markers_enabled) {
-                        var num_milestones = len / 25;
-
-                        var lines;
-                        for (var i = 0; i < num_milestones; i++) {
-                            var startpos = i * num_milestones;
-                            lines = BABYLON.Mesh.CreateLines("markers", [
-                                new BABYLON.Vector3(_wid, _wid, startpos),
-                                new BABYLON.Vector3(wid, _wid, startpos),
-                                new BABYLON.Vector3(wid, wid, startpos),
-                                new BABYLON.Vector3(_wid, wid, startpos),
-                                new BABYLON.Vector3(_wid, _wid, startpos)
-                            ], scene);
-                        }
-                    }
-                }());
-            }
-
-            return scene;
-
-        };
-
-        var scene = createScene();
-
-        engine.runRenderLoop(function() {
-            scene.tick();
-            scene.moveCamera();
-            scene.followMouse();
-            scene.drawWaves();
-            scene.render();
-        });
-
-        // Resize
-        window.addEventListener("resize", function() {
-            engine.resize();
-        });
-    </script>
-</body>
+    <body>
+        <canvas id="renderCanvas"></canvas>
+        <script src="scripts/funcs.js"></script>
+        <script src="scripts/drawFuncs.js"></script>
+        <script src="scripts/walls.js"></script>
+        <script src="scripts/scene.js"></script>
+        <script src="scripts/matador.js"></script>
+    </body>
 
 </html>
