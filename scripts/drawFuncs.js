@@ -1,6 +1,12 @@
 var curPos = null;
 var baseline = null;
 
+function init() {
+    if (!curPos && !isNaN(scene.camTarget.x)) curPos = copyVector(scene.camTarget);
+    if (!baseline && curPos) baseline = copyVector(curPos);
+    return curPos;
+}
+
 function buildCustom(name, customFunc, params) {
     addVectors(baseline, getDiff(params.elasticity));
     var points = customFunc(params);
@@ -17,20 +23,4 @@ function buildBaseline(name, modifyFunc, params) {
     }
     var p2 = vector(curPos);
     BABYLON.Mesh.CreateLines(name, [p1, p2], scene);
-}
-
-function getDiff(elastic) {
-    var goal = copyVector(scene.camTarget);
-    var diff = {
-        x: (goal.x - baseline.x) / elastic,
-        y: (goal.y - baseline.y) / elastic,
-        z: (goal.z - baseline.z) / elastic
-    };
-    return diff;
-}
-
-function init() {
-    if (!curPos && !isNaN(scene.camTarget.x)) curPos = copyVector(scene.camTarget);
-    if (!baseline && curPos) baseline = copyVector(curPos);
-    return curPos;
 }

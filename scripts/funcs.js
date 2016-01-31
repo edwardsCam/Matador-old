@@ -4,6 +4,10 @@ function addVectors(obj1, obj2) {
     obj1.z += (obj2.z) || 0;
 }
 
+function angle(x, y) {
+    return Math.atan2(y, x) + Math.PI;
+}
+
 function boundify(pos, bounds) {
     var x1 = bounds.size - 3;
     var x2 = x1 * -1;
@@ -31,18 +35,24 @@ function copyVector(obj) {
     return ret;
 }
 
-function vector(x, y, z) {
-    return new BABYLON.Vector3(x, y, z);
-}
-
-function vector(pos) {
-    return new BABYLON.Vector3(pos.x, pos.y, pos.z);
+function getDiff(elastic) {
+    var goal = copyVector(scene.camTarget);
+    var diff = {
+        x: (goal.x - baseline.x) / elastic,
+        y: (goal.y - baseline.y) / elastic,
+        z: (goal.z - baseline.z) / elastic
+    };
+    return diff;
 }
 
 function pythagorean(x, y) {
     return Math.sqrt(x * x + y * y);
 }
 
-function angle(x, y) {
-    return Math.atan2(y, x) + Math.PI;
+function vector(x, y, z) {
+    return new BABYLON.Vector3(x, y, z);
+}
+
+function vector(pos) {
+    return new BABYLON.Vector3(pos.x, pos.y, pos.z);
 }
