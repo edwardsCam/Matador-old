@@ -30,3 +30,19 @@ function copyVector(obj) {
     ret.z = obj.z;
     return ret;
 }
+
+function vector(x, y, z) {
+    return new BABYLON.Vector3(x, y, z)
+}
+
+function vector(pos) {
+    return new BABYLON.Vector3(pos.x, pos.y, pos.z)
+}
+
+function pythagorean(x, y) {
+    return Math.sqrt(x * x + y * y);
+}
+
+function angle(x, y) {
+    return Math.atan2(y, x) + Math.PI;
+}

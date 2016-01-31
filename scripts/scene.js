@@ -6,7 +6,7 @@ function createScene() {
     var scene = new BABYLON.Scene(engine);
     var globalView = null;
     var turnDamp = 8;
-    var movespeed = 0.3;
+    var movespeed = 0.6;
     var mousePos = {};
 
     setSceneVars();
@@ -37,7 +37,7 @@ function createScene() {
     }
 
     function draw() {
-        return sineWave(scene);
+        return flyingTunnel(scene);
     }
 
     function setCamTarget() {
