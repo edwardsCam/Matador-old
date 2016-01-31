@@ -5,7 +5,7 @@ function createScene() {
 
     var scene = new BABYLON.Scene(engine);
     var globalView = null;
-    var turnDamp = 10;
+    var turnDamp = 8;
     var movespeed = 0.3;
     var mousePos = {};
 
@@ -48,7 +48,7 @@ function createScene() {
         scene.camera = new BABYLON.FollowCamera("camera1", new BABYLON.Vector3(0, 0, 0), scene);
         scene.camera.attachControl(canvas, true);
         scene.camTarget = new BABYLON.Vector3(0, 0, 100);
-        
+
         scene.time = 0;
         scene.bounds = {};
         scene.bounds.size = 50;
@@ -60,6 +60,7 @@ function createScene() {
     }
 
     drawWalls(scene);
+    drawMilestones(scene, 5);
 
     initted = true;
     return scene;

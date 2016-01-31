@@ -1,33 +1,36 @@
 function drawWalls(scene) {
-    var wid = scene.bounds.size;
-    var _wid = scene.bounds.size * -1;
+    var max = scene.bounds.size;
+    var min = scene.bounds.size * -1;
     var len = scene.bounds.len;
+    
+    BABYLON.Mesh.CreateLines("wall_ne", [
+        new BABYLON.Vector3(max, max, min), new BABYLON.Vector3(max, max, len)
+    ], scene);
+    BABYLON.Mesh.CreateLines("wall_se", [
+        new BABYLON.Vector3(max, min, min), new BABYLON.Vector3(max, min, len)
+    ], scene);
+    BABYLON.Mesh.CreateLines("wall_sw", [
+        new BABYLON.Vector3(min, min, min), new BABYLON.Vector3(min, min, len)
+    ], scene);
+    BABYLON.Mesh.CreateLines("wall_nw", [
+        new BABYLON.Vector3(min, max, min), new BABYLON.Vector3(min, max, len)
+    ], scene);
+}
 
-    BABYLON.Mesh.CreateLines("lines", [
-        new BABYLON.Vector3(_wid, _wid, _wid), new BABYLON.Vector3(_wid, _wid, len)
-    ], scene);
-    BABYLON.Mesh.CreateLines("lines", [
-        new BABYLON.Vector3(_wid, wid, _wid), new BABYLON.Vector3(_wid, wid, len)
-    ], scene);
-    BABYLON.Mesh.CreateLines("lines", [
-        new BABYLON.Vector3(wid, _wid, _wid), new BABYLON.Vector3(wid, _wid, len)
-    ], scene);
-    BABYLON.Mesh.CreateLines("lines", [
-        new BABYLON.Vector3(wid, wid, _wid), new BABYLON.Vector3(wid, wid, len)
-    ], scene);
-
-    var num_milestones = 4;
+function drawMilestones(scene, num_milestones) {
+    var max = scene.bounds.size;
+    var min = scene.bounds.size * -1;
+    var len = scene.bounds.len;
     var dist = len / num_milestones;
 
-    var lines;
     for (var i = 1; i <= num_milestones; i++) {
-        var startpos = i * dist;
-        lines = BABYLON.Mesh.CreateLines("markers", [
-            new BABYLON.Vector3(_wid, _wid, startpos),
-            new BABYLON.Vector3(wid, _wid, startpos),
-            new BABYLON.Vector3(wid, wid, startpos),
-            new BABYLON.Vector3(_wid, wid, startpos),
-            new BABYLON.Vector3(_wid, _wid, startpos)
+        var pos = i * dist;
+        BABYLON.Mesh.CreateLines("milestones", [
+            new BABYLON.Vector3(min, min, pos),
+            new BABYLON.Vector3(max, min, pos),
+            new BABYLON.Vector3(max, max, pos),
+            new BABYLON.Vector3(min, max, pos),
+            new BABYLON.Vector3(min, min, pos)
         ], scene);
     }
 }

@@ -1,9 +1,7 @@
-function addPosObjects(obj1, obj2) {
-    var ret = {};
-    ret.x = obj1.x + obj2.x;
-    ret.y = obj1.y + obj2.y;
-    ret.z = obj1.z + obj2.z;
-    return ret;
+function addVectors(obj1, obj2) {
+    obj1.x += (obj2.x) || 0;
+    obj1.y += (obj2.y) || 0;
+    obj1.z += (obj2.z) || 0;
 }
 
 function boundify(pos, bounds) {
@@ -25,7 +23,7 @@ function boundify(pos, bounds) {
     }
 }
 
-function copyPosObject(obj) {
+function copyVector(obj) {
     var ret = {};
     ret.x = obj.x;
     ret.y = obj.y;
