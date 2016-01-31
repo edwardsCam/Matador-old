@@ -32,11 +32,11 @@ function copyVector(obj) {
 }
 
 function vector(x, y, z) {
-    return new BABYLON.Vector3(x, y, z)
+    return new BABYLON.Vector3(x, y, z);
 }
 
 function vector(pos) {
-    return new BABYLON.Vector3(pos.x, pos.y, pos.z)
+    return new BABYLON.Vector3(pos.x, pos.y, pos.z);
 }
 
 function pythagorean(x, y) {

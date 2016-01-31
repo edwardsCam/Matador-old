@@ -6,8 +6,12 @@ function createScene() {
     var scene = new BABYLON.Scene(engine);
     var globalView = null;
     var turnDamp = 8;
-    var movespeed = 0.6;
+    var movespeed = 1.5;
     var mousePos = {};
+
+    var cycle = 0;
+    var maxCycle = 3;
+    var hitRegistered = false;
 
     setSceneVars();
 
@@ -36,8 +40,33 @@ function createScene() {
         }
     }
 
+    function onKeyDown(evt) {
+        if (!hitRegistered && evt.keyCode == 32) {
+            hitRegistered = true;
+            if ((++cycle) > maxCycle) cycle = 0;
+        }
+    }
+
+    function onKeyUp(evt) {
+        if (hitRegistered) {
+            hitRegistered = false;
+        }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+
     function draw() {
-        return flyingTunnel(scene);
+        switch (cycle) {
+            case 0:
+                return sineWave(scene);
+            case 1:
+                return flyingTunnel(scene);
+            case 2:
+                return chevron(scene)
+            default:
+                return flappingChevron(scene);
+        }
     }
 
     function setCamTarget() {
