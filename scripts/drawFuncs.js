@@ -3,7 +3,7 @@ var baseline = null;
 
 var sineWave = function(scene) {
     if (!init()) return;
-    buildBaseline(function() {
+    buildBaseline("sineWave", function() {
         var amplitude = 15;
         var period = 0.8;
         var maxDistance = 25;
@@ -19,24 +19,20 @@ var sineWave = function(scene) {
 
 var sineTunnel = function(scene) {
     if (!init()) return;
-    buildBaseline();
+    buildBaseline("sineTunnel", function() {});
 };
 
-function buildBaseline(modifyFunc) {
-    var points = [];
-
-    addVectors(baseline, getDiff(baseline));
-    points.push(new BABYLON.Vector3(curPos.x, curPos.y, curPos.z));
+function buildBaseline(name, modifyFunc) {
+    var p1 = new BABYLON.Vector3(curPos.x, curPos.y, curPos.z);
+    addVectors(baseline, getDiff(20));
     curPos = copyVector(baseline);
-    if (modifyFunc) modifyFunc();
+    modifyFunc();
     boundify(curPos, scene.bounds);
-    points.push(new BABYLON.Vector3(curPos.x, curPos.y, curPos.z));
-    BABYLON.Mesh.CreateLines("sineWave", points, scene);
+    var p2 = new BABYLON.Vector3(curPos.x, curPos.y, curPos.z);
+    BABYLON.Mesh.CreateLines(name, [p1, p2], scene);
 }
 
-function getDiff() {
-    var elastic = 20;
-
+function getDiff(elastic) {
     var goal = copyVector(scene.camTarget);
     var diff = {
         x: (goal.x - baseline.x) / elastic,
