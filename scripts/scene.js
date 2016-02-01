@@ -10,7 +10,7 @@ function createScene() {
     var mousePos = {};
 
     var cycle = 0;
-    var maxCycle = 3;
+    var maxCycle = 4;
     var hitRegistered = false;
 
     setSceneVars();
@@ -59,13 +59,15 @@ function createScene() {
     function draw() {
         switch (cycle) {
             case 0:
-                return sineWave(scene);
-            case 1:
                 return flyingTunnel(scene);
-            case 2:
-                return chevron(scene)
-            default:
+            case 1:
                 return flappingChevron(scene);
+            case 2:
+                return chevron(scene);
+            case 3:
+                return spiral(scene);
+            default:
+                return sineWave(scene);
         }
     }
 

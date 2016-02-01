@@ -6,13 +6,14 @@ var sineWave = function(scene) {
         period: 0.8,
         maxDistance: 25,
         minDistance: -25,
-        boundify: false
+        bound_size: scene.bounds.size
     };
-    buildBaseline("sineWave", function(params) {
-        var distanceMod = params.maxDistance - (((params.maxDistance - params.minDistance) / scene.maxPointerPos) * Math.abs(curPos.x));
+    buildSimple("sineWave", function(params) {
+        var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, Math.abs(curPos.x));
         curPos.z += distanceMod;
 
-        var theta = Math.PI * scene.time / params.period;
+        var theta = pi2 * scene.time / params.period;
+        theta %= pi2;
         var wave = Math.cos(theta) * params.amplitude;
         curPos.y += wave;
     }, params);

@@ -2,44 +2,47 @@ var chevron = function(scene) {
     if (!init()) return;
     var params = {
         elasticity: 25,
-        amplitude: 300,
-        maxDistance: 5,
-        minDistance: -5,
+        minAmp: 1,
+        maxAmp: 300,
+        maxDistance: 10,
+        minDistance: 0,
         amplitudeMod: 60.5,
-        centerDistMod: 2,
-        boundify: false
+        zdist: 300,
+        boundify: false,
+        bound_size: scene.bounds.size
     };
     buildCustom("chevron", function(params) {
 
         var xpos = baseline.x;
         var ypos = baseline.y;
 
-        var centerDist = pythagorean(xpos, ypos) / params.centerDistMod;
-        var distanceMod = params.maxDistance - (((params.maxDistance - params.minDistance) / scene.maxPointerPos) * centerDist);
+        var dist = pythagorean(xpos, ypos);
+        var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
-        var amp = params.amplitude;
-        amp -= distanceMod * params.amplitudeMod;
+        var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
 
         var centerAngle = angle(xpos, ypos);
-        var tx = Math.sin(centerAngle) * amp / 2;
-        var ty = Math.cos(centerAngle) * amp / 2;
+        var waveSin = Math.sin(centerAngle) * amp / 2;
+        var waveCos = Math.cos(centerAngle) * amp / 2;
 
         var p1 = copyVector(baseline);
-        p1.x -= tx;
-        p1.y += ty;
-        p1.z -= 300;
+        p1.x -= waveSin;
+        p1.y += waveCos;
+        p1.z -= params.zdist;
 
         var p2 = copyVector(baseline);
-        p2.x += tx;
-        p2.y -= ty;
-        p2.z -= 300;
+        p2.x += waveSin;
+        p2.y -= waveCos;
+        p2.z -= params.zdist;
 
         if (params.boundify) {
-            boundify(p1, scene.bounds);
-            boundify(p2, scene.bounds);
+            boundify(p1, params.bound_size);
+            boundify(p2, params.bound_size);
         }
 
-        return [vector(p1), vector(baseline), vector(p2)];
+        return [
+            [vector(p1), vector(baseline), vector(p2)]
+        ];
     }, params);
 };
