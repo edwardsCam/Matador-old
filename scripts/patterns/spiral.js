@@ -1,3 +1,10 @@
+var initSpiral = function() {
+    prevPos.a = null;
+    prevPos.b = null;
+    prevPos.c = null;
+    prevPos.d = null;
+};
+
 var spiral = function(scene) {
     if (!init()) return;
     var params = {
@@ -6,14 +13,14 @@ var spiral = function(scene) {
         maxAmp: 20,
         minPeriod: 1,
         maxPeriod: 1,
-        maxDistance: 10,
         minDistance: 0,
+        maxDistance: 10,
         boundify: true,
         bound_size: 100
     };
     buildCustom("spiral", function(params) {
 
-        var dist = pythagorean(baseline.x, baseline.y);
+        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
@@ -41,15 +48,15 @@ var spiral = function(scene) {
         p4.x += waveSin;
         p4.y -= waveCos;
 
-        var c1 = curPos.a || p1;
-        var c2 = curPos.b || p2;
-        var c3 = curPos.c || p3;
-        var c4 = curPos.d || p4;
+        var c1 = prevPos.a || p1;
+        var c2 = prevPos.b || p2;
+        var c3 = prevPos.c || p3;
+        var c4 = prevPos.d || p4;
 
-        curPos.a = p1;
-        curPos.b = p2;
-        curPos.c = p3;
-        curPos.d = p4;
+        prevPos.a = p1;
+        prevPos.b = p2;
+        prevPos.c = p3;
+        prevPos.d = p4;
 
         if (params.boundify) {
             boundify(p1, params.bound_size);

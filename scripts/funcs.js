@@ -6,8 +6,11 @@ function addVectors(obj1, obj2) {
     obj1.z += (obj2.z) || 0;
 }
 
-function angle(x, y) {
-    return Math.atan2(y, x) + Math.PI;
+function angle(arg1, arg2) {
+    if (arg2) {
+        return Math.atan2(arg2, arg1) + Math.PI;
+    }
+    return angle(arg1.x, arg1.y);
 }
 
 function boundify(pos, bound_size) {
@@ -38,7 +41,7 @@ function copyVector(obj) {
 }
 
 function getDiff(elastic) {
-    if (elastic < 1) elastic = 1;
+    if (!elastic || elastic < 1) elastic = 1;
     var goal = copyVector(scene.camTarget);
     var diff = {
         x: (goal.x - baseline.x) / elastic,
@@ -48,8 +51,15 @@ function getDiff(elastic) {
     return diff;
 }
 
-function pythagorean(x, y) {
-    return Math.sqrt(x * x + y * y);
+function getSpeed(elastic) {
+    return pythagorean(getDiff(elastic));
+}
+
+function pythagorean(arg1, arg2) {
+    if (arg2) {
+        return Math.sqrt(arg1 * arg1 + arg2 * arg2);
+    }
+    return pythagorean(arg1.x, arg1.y);
 }
 
 function vector(pos) {

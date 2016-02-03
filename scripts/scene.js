@@ -10,7 +10,7 @@ function createScene() {
     var mousePos = {};
 
     var cycle = 0;
-    var maxCycle = 4;
+    var maxCycle = 5;
     var hitRegistered = false;
 
     setSceneVars();
@@ -44,6 +44,12 @@ function createScene() {
         if (!hitRegistered && evt.keyCode == 32) {
             hitRegistered = true;
             if ((++cycle) > maxCycle) cycle = 0;
+            if (cycle == 0) initFlyingTunnel();
+            else if (cycle == 1) initFlappingChevron();
+            else if (cycle == 2) initChevron();
+            else if (cycle == 3) initSpiral();
+            else if (cycle == 4) initCrosshair();
+            else initSineWave();
         }
     }
 
@@ -57,18 +63,12 @@ function createScene() {
     window.addEventListener("keyup", onKeyUp);
 
     function draw() {
-        switch (cycle) {
-            case 0:
-                return flyingTunnel(scene);
-            case 1:
-                return flappingChevron(scene);
-            case 2:
-                return chevron(scene);
-            case 3:
-                return spiral(scene);
-            default:
-                return sineWave(scene);
-        }
+        if (cycle == 0) flyingTunnel(scene);
+        else if (cycle == 1) flappingChevron(scene);
+        else if (cycle == 2) chevron(scene);
+        else if (cycle == 3) spiral(scene);
+        else if (cycle == 4) crosshair(scene);
+        else sineWave(scene);
     }
 
     function setCamTarget() {

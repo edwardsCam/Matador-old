@@ -1,29 +1,30 @@
+var initFlyingTunnel = function() {
+    prevPos.a = null;
+    prevPos.b = null;
+};
+
 var flyingTunnel = function(scene) {
     if (!init()) return;
     var params = {
         elasticity: 50,
         minAmp: 5,
-        maxAmp: 80,
-        maxDistance: 5,
+        maxAmp: 50,
         minDistance: 0,
-        amplitudeMod: 3,
+        maxDistance: 5,
         boundify: false,
         bound_size: scene.bounds.size
     };
     buildCustom("flyingTunnel", function(params) {
 
-        var xpos = baseline.x;
-        var ypos = baseline.y;
-
-        var dist = pythagorean(xpos, ypos);
+        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
 
-        var centerAngle = angle(xpos, ypos);
-        var waveSin = Math.sin(centerAngle) * amp / 2;
-        var waveCos = Math.cos(centerAngle) * amp / 2;
+        var centerAngle = angle(baseline);
+        var waveSin = Math.sin(centerAngle) * amp;
+        var waveCos = Math.cos(centerAngle) * amp;
 
         var p1 = copyVector(baseline);
         p1.x -= waveSin;
@@ -33,11 +34,11 @@ var flyingTunnel = function(scene) {
         p2.x += waveSin;
         p2.y -= waveCos;
 
-        var c1 = curPos.a || p1;
-        var c2 = curPos.b || p2;
+        var c1 = prevPos.a || p1;
+        var c2 = prevPos.b || p2;
 
-        curPos.a = p1;
-        curPos.b = p2;
+        prevPos.a = p1;
+        prevPos.b = p2;
 
         if (params.boundify) {
             boundify(p1, params.bound_size);
