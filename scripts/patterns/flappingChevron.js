@@ -1,9 +1,7 @@
-
-
 var initFlappingChevron = function() {};
 
 var flappingChevron = function(scene) {
-    if (!init()) return;
+    if (!init(scene)) return;
     var params = {
         elasticity: 40,
         minAmp: -40,
@@ -13,17 +11,16 @@ var flappingChevron = function(scene) {
         minZDist: 100,
         maxZDist: -20,
         boundify: false,
-        bound_size: scene.bounds.size
+        bound_size: 50,
+        maxSegments: 100
     };
-    buildCustom("flappingChevron", function(params) {
+    build("flappingChevron", function(params) {
 
-        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
 
-        var centerAngle = angle(baseline);
         var waveSin = Math.sin(centerAngle) * amp;
         var waveCos = Math.cos(centerAngle) * amp;
 
@@ -43,6 +40,8 @@ var flappingChevron = function(scene) {
             boundify(p1, params.bound_size);
             boundify(p2, params.bound_size);
         }
+
+        cleanup(params.maxSegments);
 
         return [
             [vector(p1), vector(baseline), vector(p2)]

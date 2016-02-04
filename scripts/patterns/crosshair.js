@@ -10,7 +10,7 @@ var initCrosshair = function() {
 };
 
 var crosshair = function(scene) {
-    if (!init()) return;
+    if (!init(scene)) return;
     var params = {
         elasticity: 30,
         minDistance: -1,
@@ -19,13 +19,13 @@ var crosshair = function(scene) {
         maxSpread: 80,
         outerSpread: 2.5,
         boundify: false,
-        bound_size: scene.bounds.size
+        bound_size: 50,
+        maxSegments: 200
     };
-    buildCustom("crosshair", function(params) {
+    build("crosshair", function(params) {
 
         var speed = getSpeed(params.elasticity);
 
-        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
@@ -63,10 +63,10 @@ var crosshair = function(scene) {
         var c2 = prevPos.b || p2;
         var c3 = prevPos.c || p3;
         var c4 = prevPos.d || p4;
-        var c5 = prevPos.e || p1;
-        var c6 = prevPos.f || p2;
-        var c7 = prevPos.g || p3;
-        var c8 = prevPos.h || p4;
+        var c5 = prevPos.e || p5;
+        var c6 = prevPos.f || p6;
+        var c7 = prevPos.g || p7;
+        var c8 = prevPos.h || p8;
 
         prevPos.a = p1;
         prevPos.b = p2;
@@ -87,6 +87,8 @@ var crosshair = function(scene) {
             boundify(c3, params.bound_size);
             boundify(c4, params.bound_size);
         }
+
+        cleanup(params.maxSegments);
 
         return [
             [vector(p1), vector(c1)],

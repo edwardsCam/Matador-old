@@ -40,6 +40,18 @@ function copyVector(obj) {
     return ret;
 }
 
+function flipX(obj) {
+    var ret = copyVector(obj);
+    ret.x *= -1;
+    return ret;
+}
+
+function flipY(obj) {
+    var ret = copyVector(obj);
+    ret.y *= -1;
+    return ret;
+}
+
 function getDiff(elastic) {
     if (!elastic || elastic < 1) elastic = 1;
     var goal = copyVector(scene.camTarget);

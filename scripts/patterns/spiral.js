@@ -6,7 +6,7 @@ var initSpiral = function() {
 };
 
 var spiral = function(scene) {
-    if (!init()) return;
+    if (!init(scene)) return;
     var params = {
         elasticity: 10,
         minAmp: 5,
@@ -16,11 +16,11 @@ var spiral = function(scene) {
         minDistance: 0,
         maxDistance: 10,
         boundify: true,
-        bound_size: 100
+        bound_size: 100,
+        maxSegments: 400
     };
-    buildCustom("spiral", function(params) {
+    build("spiral", function(params) {
 
-        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
@@ -68,6 +68,8 @@ var spiral = function(scene) {
             boundify(c3, params.bound_size);
             boundify(c4, params.bound_size);
         }
+
+        cleanup(params.maxSegments);
 
         return [
             [vector(p1), vector(c1)],

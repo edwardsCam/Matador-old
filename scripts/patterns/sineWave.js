@@ -3,17 +3,19 @@ var initSineWave = function() {
 };
 
 var sineWave = function(scene) {
-    if (!init()) return;
+    if (!init(scene)) return;
     var params = {
         elasticity: 20,
         amplitude: 15,
         period: 0.8,
         minDistance: -2,
         maxDistance: 20,
+        symmetry: true,
         boundify: false,
-        bound_size: scene.bounds.size
+        bound_size: 50,
+        maxSegments: 50
     };
-    buildCustom("sineWave", function(params) {
+    build("sineWave", function(params) {
 
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, Math.abs(baseline.x));
         baseline.z += distanceMod;
@@ -28,10 +30,31 @@ var sineWave = function(scene) {
         var c1 = prevPos.a || p1;
         prevPos.a = p1;
 
+        if (params.symmetry) {
+            var p2 = flipX(baseline);
+            p2.y += wave;
+
+            var c2 = prevPos.b || p2;
+            prevPos.b = p2;
+        }
+
         if (params.boundify) {
             boundify(p1, params.bound_size);
             boundify(c1, params.bound_size);
+            if (params.symmetry) {
+                boundify(p2, params.bound_size);
+                boundify(c2, params.bound_size);
+            }
         }
+
+        if (params.symmetry) {
+            return [
+                [vector(p1), vector(c1)],
+                [vector(p2), vector(c2)]
+            ];
+        }
+
+        cleanup(params.maxSegments);
 
         return [
             [vector(p1), vector(c1)]

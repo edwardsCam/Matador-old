@@ -4,7 +4,7 @@ var initFlyingTunnel = function() {
 };
 
 var flyingTunnel = function(scene) {
-    if (!init()) return;
+    if (!init(scene)) return;
     var params = {
         elasticity: 50,
         minAmp: 5,
@@ -12,17 +12,16 @@ var flyingTunnel = function(scene) {
         minDistance: 0,
         maxDistance: 5,
         boundify: false,
-        bound_size: scene.bounds.size
+        bound_size: 50,
+        maxSegments: 150
     };
-    buildCustom("flyingTunnel", function(params) {
+    build("flyingTunnel", function(params) {
 
-        var dist = pythagorean(baseline);
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
 
-        var centerAngle = angle(baseline);
         var waveSin = Math.sin(centerAngle) * amp;
         var waveCos = Math.cos(centerAngle) * amp;
 
@@ -46,6 +45,8 @@ var flyingTunnel = function(scene) {
             boundify(c1, params.bound_size);
             boundify(c2, params.bound_size);
         }
+
+        cleanup(params.maxSegments);
 
         return [
             [vector(c1), vector(p1), vector(p2), vector(c2)]
