@@ -1,5 +1,6 @@
 var initSineWave = function() {
     prevPos.a = null;
+    prevPos.b = null;
 };
 
 var sineWave = function(scene) {
@@ -13,7 +14,7 @@ var sineWave = function(scene) {
         symmetry: true,
         boundify: false,
         bound_size: 50,
-        maxSegments: 50
+        maxSegments: 400
     };
     build("sineWave", function(params) {
 
@@ -47,17 +48,12 @@ var sineWave = function(scene) {
             }
         }
 
-        if (params.symmetry) {
-            return [
-                [vector(p1), vector(c1)],
-                [vector(p2), vector(c2)]
-            ];
-        }
-
         cleanup(params.maxSegments);
 
-        return [
-            [vector(p1), vector(c1)]
-        ];
+        var ret = [];
+        ret.push([vector(p1), vector(c1)]);
+        if (params.symmetry) ret.push([vector(p2), vector(c2)]);
+        
+        return ret;
     }, params);
 };

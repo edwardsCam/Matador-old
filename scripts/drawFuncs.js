@@ -1,12 +1,8 @@
 var prevPos = null;
 var baseline = null;
-
 var dist = 0;
 var centerAngle = 0;
-
 var segments = [];
-
-var maxSegments = 100;
 
 var draw = function(n, scene) {
     if (n == 0) flyingTunnel(scene);
@@ -33,7 +29,7 @@ function build(name, customFunc, params) {
     }
 }
 
-var cleanup = function(max) {
+function cleanup(max) {
     while (segments.length > max) {
         segments[0].dispose();
         segments.splice(0, 1);

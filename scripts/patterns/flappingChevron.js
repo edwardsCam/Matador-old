@@ -12,7 +12,7 @@ var flappingChevron = function(scene) {
         maxZDist: -20,
         boundify: false,
         bound_size: 50,
-        maxSegments: 100
+        maxSegments: 150
     };
     build("flappingChevron", function(params) {
 
@@ -43,8 +43,9 @@ var flappingChevron = function(scene) {
 
         cleanup(params.maxSegments);
 
-        return [
-            [vector(p1), vector(baseline), vector(p2)]
-        ];
+        var ret = [];
+        ret.push([vector(p1), vector(baseline), vector(p2)]);
+        return ret;
+        
     }, params);
 };

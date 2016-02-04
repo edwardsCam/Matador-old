@@ -13,7 +13,7 @@ var flyingTunnel = function(scene) {
         maxDistance: 5,
         boundify: false,
         bound_size: 50,
-        maxSegments: 150
+        maxSegments: 200
     };
     build("flyingTunnel", function(params) {
 
@@ -48,8 +48,9 @@ var flyingTunnel = function(scene) {
 
         cleanup(params.maxSegments);
 
-        return [
-            [vector(c1), vector(p1), vector(p2), vector(c2)]
-        ];
+        var ret = [];
+        ret.push([vector(c1), vector(p1), vector(p2), vector(c2)]);
+        return ret;
+        
     }, params);
 };
