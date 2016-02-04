@@ -87,10 +87,18 @@ function twoPoint(x1, y1, x2, y2, x) {
     return result;
 }
 
-function buildSegment() {
+function buildSegment(arr) {
     var points = [];
-    for (var i = 0; i < arguments.length; i++) {
-        points.push(vector(arguments[i]));
+    for (var i = 0; i < arr.length; i++) {
+        points.push(vector(arr[i]));
     }
     return points;
+}
+
+function buildSegments() {
+    var lines = [];
+    for (var i = 0; i < arguments.length; i++) {
+        lines.push(buildSegment(arguments[i]));
+    }
+    return lines;
 }

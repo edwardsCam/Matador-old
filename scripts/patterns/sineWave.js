@@ -49,11 +49,8 @@ var sineWave = function(scene) {
         }
 
         cleanup(params.maxSegments);
+        if (params.symmetry) return buildSegments([p1, c1], [p2, c2]);
+        return buildSegments([p1, c1]);
 
-        var ret = [];
-        ret.push(buildSegment(p1, c1));
-        if (params.symmetry) ret.push(buildSegment(p2, c2));
-
-        return ret;
     }, params);
 };

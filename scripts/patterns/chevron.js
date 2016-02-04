@@ -48,9 +48,7 @@ var chevron = function(scene) {
 
         cleanup(params.maxSegments);
 
-        var ret = [];
-        ret.push(buildSegment(p1, baseline, p2));
-        return ret;
+        return buildSegments([p1, baseline, p2]);
 
     }, params);
 };
