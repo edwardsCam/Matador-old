@@ -72,12 +72,12 @@ var spiral = function(scene) {
         cleanup(params.maxSegments);
 
         var ret = [];
-        ret.push([vector(p1), vector(c1)]);
-        ret.push([vector(p2), vector(c2)]);
-        ret.push([vector(p3), vector(c3)]);
-        ret.push([vector(p4), vector(c4)]);
+        ret.push(buildSegment(p1, c1));
+        ret.push(buildSegment(p2, c2));
+        ret.push(buildSegment(p3, c3));
+        ret.push(buildSegment(p4, c4));
 
         return ret;
-        
+
     }, params);
 };

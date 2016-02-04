@@ -86,3 +86,11 @@ function twoPoint(x1, y1, x2, y2, x) {
     if (result > max) return max;
     return result;
 }
+
+function buildSegment() {
+    var points = [];
+    for (var i = 0; i < arguments.length; i++) {
+        points.push(vector(arguments[i]));
+    }
+    return points;
+}

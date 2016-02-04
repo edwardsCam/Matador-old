@@ -49,8 +49,8 @@ var flyingTunnel = function(scene) {
         cleanup(params.maxSegments);
 
         var ret = [];
-        ret.push([vector(c1), vector(p1), vector(p2), vector(c2)]);
+        ret.push(buildSegment(c1, p1, p2, c2));
         return ret;
-        
+
     }, params);
 };

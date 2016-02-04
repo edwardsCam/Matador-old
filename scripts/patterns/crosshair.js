@@ -91,14 +91,14 @@ var crosshair = function(scene) {
         cleanup(params.maxSegments);
 
         var ret = [];
-        ret.push([vector(p1), vector(c1)]);
-        ret.push([vector(p2), vector(c2)]);
-        ret.push([vector(p3), vector(c3)]);
-        ret.push([vector(p4), vector(c4)]);
-        ret.push([vector(p5), vector(c5)]);
-        ret.push([vector(p6), vector(c6)]);
-        ret.push([vector(p7), vector(c7)]);
-        ret.push([vector(p8), vector(c8)]);
+        ret.push(buildSegment(p1, c1));
+        ret.push(buildSegment(p2, c2));
+        ret.push(buildSegment(p3, c3));
+        ret.push(buildSegment(p4, c4));
+        ret.push(buildSegment(p5, c5));
+        ret.push(buildSegment(p6, c6));
+        ret.push(buildSegment(p7, c7));
+        ret.push(buildSegment(p8, c8));
         return ret;
 
     }, params);

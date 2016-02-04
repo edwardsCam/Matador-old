@@ -44,8 +44,8 @@ var flappingChevron = function(scene) {
         cleanup(params.maxSegments);
 
         var ret = [];
-        ret.push([vector(p1), vector(baseline), vector(p2)]);
+        ret.push(buildSegment(p1, baseline, p2));
         return ret;
-        
+
     }, params);
 };
