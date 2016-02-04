@@ -8,16 +8,16 @@ var initSpiral = function() {
 var spiral = function(scene) {
     if (!init(scene)) return;
     var params = {
-        elasticity: 10,
+        elasticity: 40,
         minAmp: 5,
         maxAmp: 20,
         minPeriod: 1,
         maxPeriod: 1,
         minDistance: 0,
-        maxDistance: 10,
+        maxDistance: 4,
         boundify: true,
         bound_size: 100,
-        maxSegments: 400
+        maxSegments: 350
     };
     build("spiral", function(params) {
 
@@ -26,9 +26,7 @@ var spiral = function(scene) {
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
         var per = twoPoint(params.minDistance, params.maxPeriod, params.maxDistance, params.minPeriod, distanceMod);
-
-        var theta = pi2 * scene.time / per;
-        theta %= pi2;
+        var theta = getTheta(scene.time, per);
         var waveSin = Math.sin(theta) * amp;
         var waveCos = Math.cos(theta) * amp;
 

@@ -25,7 +25,6 @@ var chevron = function(scene) {
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
         var squeezeMod = twoPoint(params.minDistance, params.minSqueeze, params.maxDistance, params.maxSqueeze, distanceMod);
-
         var waveSin = Math.sin(centerAngle) * amp / squeezeMod;
         var waveCos = Math.cos(centerAngle) * amp / squeezeMod;
 

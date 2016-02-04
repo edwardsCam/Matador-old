@@ -14,15 +14,14 @@ var sineWave = function(scene) {
         symmetry: true,
         boundify: false,
         bound_size: 50,
-        maxSegments: 400
+        maxSegments: 500
     };
     build("sineWave", function(params) {
 
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, Math.abs(baseline.x));
         baseline.z += distanceMod;
 
-        var theta = pi2 * scene.time / params.period;
-        theta %= pi2;
+        var theta = getTheta(scene.time, params.period);
         var wave = Math.cos(theta) * params.amplitude;
 
         var p1 = copyVector(baseline);
@@ -49,6 +48,7 @@ var sineWave = function(scene) {
         }
 
         cleanup(params.maxSegments);
+
         if (params.symmetry) return buildSegments([p1, c1], [p2, c2]);
         return buildSegments([p1, c1]);
 

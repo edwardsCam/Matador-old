@@ -20,7 +20,6 @@ var flappingChevron = function(scene) {
         baseline.z += distanceMod;
 
         var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
-
         var waveSin = Math.sin(centerAngle) * amp;
         var waveCos = Math.cos(centerAngle) * amp;
 

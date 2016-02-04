@@ -102,3 +102,7 @@ function buildSegments() {
     }
     return lines;
 }
+
+function getTheta(x, p) {
+    return (pi2 * x / p) % pi2;
+}

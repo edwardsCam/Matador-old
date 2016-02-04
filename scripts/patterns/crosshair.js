@@ -20,11 +20,11 @@ var crosshair = function(scene) {
         outerSpread: 2.5,
         boundify: false,
         bound_size: 50,
-        maxSegments: 200
+        maxSegments: 300
     };
     build("crosshair", function(params) {
 
-        var speed = getSpeed(params.elasticity);
+        //var speed = getSpeed(params.elasticity);
 
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
