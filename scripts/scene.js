@@ -84,6 +84,13 @@ function createScene() {
     drawWalls(scene);
     drawMilestones(scene, 5);
 
+    var music = new BABYLON.Sound("Music", "sounds/something-good.mp3", scene,
+        function() {
+            // Sound has been downloaded & decoded
+            music.play();
+        }
+    );
+
     initted = true;
     return scene;
 }
