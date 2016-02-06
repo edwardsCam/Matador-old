@@ -10,7 +10,7 @@ function createScene() {
     var mousePos = {};
 
     var patternNum = 0;
-    var maxCycle = 5;
+    var maxCycle = 6;
     var hitRegistered = false;
 
     setSceneVars();
@@ -71,7 +71,7 @@ function createScene() {
         scene.bounds.len = 1000;
 
         globalView = scene.camera.viewport.toGlobal(engine);
-        scene.maxPointerPos = globalView.width / (turnDamp * 2);
+        scene.maxPointerPos = (globalView.width + globalView.height) / (turnDamp * 4);
         setCamTarget();
     }
 
@@ -87,15 +87,15 @@ function createScene() {
 
     };
 
-    var music = new BABYLON.Sound("Music", "sounds/something-good.mp3", scene,
+    var music = new BABYLON.Sound("Music", "sounds/maps.mp3", scene,
         function() {
-            initted = true;
             scene.SOUND = new BABYLON.Analyser(scene);
             BABYLON.Engine.audioEngine.connectToAnalyser(scene.SOUND);
             scene.SOUND.FFT_SIZE = 256;
             scene.SOUND.SMOOTHING = 0.65;
             scene.tick = tickfunc;
             music.play();
+            initted = true;
         }
     );
     return scene;

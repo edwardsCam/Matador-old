@@ -21,13 +21,14 @@ var flyingTunnel = function(scene) {
         baseline.z += distanceMod;
 
         var bfd = scene.SOUND.getByteFrequencyData();
-        var fbc = scene.SOUND.getFrequencyBinCount();
+        var fbc = scene.SOUND.getFrequencyBinCount() * 2.0 / 3.0;
         var soundLvl = 0;
         for (var i = 0; i < fbc; i++) {
             soundLvl += bfd[i];
         }
+        soundLvl /= fbc;
 
-        var amp = twoPoint(12000, params.maxAmp, 13000, params.minAmp, soundLvl);
+        var amp = twoPoint(50, params.minAmp, 200, params.maxAmp, soundLvl);
         var waveSin = Math.sin(centerAngle) * amp;
         var waveCos = Math.cos(centerAngle) * amp;
 

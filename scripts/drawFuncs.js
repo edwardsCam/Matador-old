@@ -5,11 +5,12 @@ var centerAngle = 0;
 var segments = [];
 
 var draw = function(n, scene) {
-    if (n == 0) flyingTunnel(scene);
-    else if (n == 1) flappingChevron(scene);
-    else if (n == 2) chevron(scene);
-    else if (n == 3) spiral(scene);
-    else if (n == 4) crosshair(scene);
+    if (n == 0) soundWave(scene);
+    else if (n == 1) flyingTunnel(scene);
+    else if (n == 2) flappingChevron(scene);
+    else if (n == 3) chevron(scene);
+    else if (n == 4) spiral(scene);
+    else if (n == 5) crosshair(scene);
     else sineWave(scene);
 }
 
