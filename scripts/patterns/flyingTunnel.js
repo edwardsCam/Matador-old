@@ -7,7 +7,7 @@ var flyingTunnel = function(scene) {
     if (!init(scene)) return;
     var params = {
         elasticity: 50,
-        minAmp: 5,
+        minAmp: 2,
         maxAmp: 50,
         minDistance: 0,
         maxDistance: 5,
@@ -20,7 +20,14 @@ var flyingTunnel = function(scene) {
         var distanceMod = twoPoint(0, params.maxDistance, scene.maxPointerPos, params.minDistance, dist);
         baseline.z += distanceMod;
 
-        var amp = twoPoint(params.minDistance, params.maxAmp, params.maxDistance, params.minAmp, distanceMod);
+        var bfd = scene.SOUND.getByteFrequencyData();
+        var fbc = scene.SOUND.getFrequencyBinCount();
+        var soundLvl = 0;
+        for (var i = 0; i < fbc; i++) {
+            soundLvl += bfd[i];
+        }
+
+        var amp = twoPoint(12000, params.maxAmp, 13000, params.minAmp, soundLvl);
         var waveSin = Math.sin(centerAngle) * amp;
         var waveCos = Math.cos(centerAngle) * amp;
 

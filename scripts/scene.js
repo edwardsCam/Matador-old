@@ -15,13 +15,7 @@ function createScene() {
 
     setSceneVars();
 
-    scene.tick = function() {
-        var delta = (1 / engine.getFps());
-        scene.time += delta;
-        moveCamera();
-        getMouseInput();
-        draw(patternNum, scene);
-    };
+    scene.tick = function() {};
 
     function moveCamera() {
         scene.camera.position.z += movespeed;
@@ -81,16 +75,27 @@ function createScene() {
         setCamTarget();
     }
 
-    drawWalls(scene);
-    drawMilestones(scene, 5);
+    //drawWalls(scene);
+    //drawMilestones(scene, 5);
+
+    var tickfunc = function() {
+        var delta = (1 / engine.getFps());
+        scene.time += delta;
+        moveCamera();
+        getMouseInput();
+        draw(patternNum, scene);
+
+    };
 
     var music = new BABYLON.Sound("Music", "sounds/something-good.mp3", scene,
         function() {
-            // Sound has been downloaded & decoded
+            initted = true;
+            scene.SOUND = new BABYLON.Analyser(scene);
+            BABYLON.Engine.audioEngine.connectToAnalyser(scene.SOUND);
+            scene.SOUND.FFT_SIZE = 256;
+            scene.tick = tickfunc;
             music.play();
         }
     );
-
-    initted = true;
     return scene;
 }
