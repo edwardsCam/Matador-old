@@ -67,8 +67,6 @@ var spiral = function(scene) {
             boundify(c4, params.bound_size);
         }
 
-        cleanup(params.maxSegments);
-
         return buildSegments([p1, c1], [p2, c2], [p3, c3], [p4, c4]);
 
     }, params);

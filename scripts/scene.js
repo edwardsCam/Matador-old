@@ -75,8 +75,8 @@ function createScene() {
         setCamTarget();
     }
 
-    //drawWalls(scene);
-    //drawMilestones(scene, 5);
+    drawWalls(scene);
+    drawMilestones(scene, 5);
 
     var tickfunc = function() {
         var delta = (1 / engine.getFps());
@@ -93,6 +93,7 @@ function createScene() {
             scene.SOUND = new BABYLON.Analyser(scene);
             BABYLON.Engine.audioEngine.connectToAnalyser(scene.SOUND);
             scene.SOUND.FFT_SIZE = 256;
+            scene.SOUND.SMOOTHING = 0.65;
             scene.tick = tickfunc;
             music.play();
         }

@@ -88,8 +88,6 @@ var crosshair = function(scene) {
             boundify(c4, params.bound_size);
         }
 
-        cleanup(params.maxSegments);
-
         return buildSegments([p1, c1], [p2, c2], [p3, c3], [p4, c4], [p5, c5], [p6, c6], [p7, c7], [p8, c8]);
 
     }, params);

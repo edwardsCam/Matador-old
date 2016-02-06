@@ -20,12 +20,13 @@ function init(scene) {
 }
 
 function build(name, customFunc, params) {
+    cleanup(params.maxSegments);
     addVectors(baseline, getDiff(params.elasticity));
     dist = pythagorean(baseline);
     centerAngle = angle(baseline);
-    var points = customFunc(params);
-    for (var i = 0; i < points.length; i++) {
-        segments.push(BABYLON.Mesh.CreateLines(name, points[i], scene));
+    var lines = customFunc(params);
+    for (var i = 0; i < lines.length; i++) {
+        segments.push(BABYLON.Mesh.CreateLines(name, lines[i], scene));
     }
 }
 

@@ -52,8 +52,6 @@ var flyingTunnel = function(scene) {
             boundify(c2, params.bound_size);
         }
 
-        cleanup(params.maxSegments);
-
         return buildSegments([c1, p1, p2, c2]);
 
     }, params);

@@ -40,8 +40,6 @@ var flappingChevron = function(scene) {
             boundify(p2, params.bound_size);
         }
 
-        cleanup(params.maxSegments);
-
         return buildSegments([p1, baseline, p2]);
 
     }, params);
